@@ -1,0 +1,21 @@
+# eureka的端口
+server:
+  port: 8761
+# 注册的目标机器
+target-eureka: localhost
+spring:
+  application:
+    name: eureka-server
+eureka:
+  #server一定程度上也是client，互为client，
+  client:
+    #由于自己就是服务器，不需要注册到自己
+    register-with-eureka: false
+    #由于自己就是服务器，不需要从服务器获取注册信息
+    fetch-registry: false
+    #服务地址s
+    service-url:
+      defaultZone: http://${target-eureka}:8762/eureka/
+  # 用真实地址可以访问
+  instance:
+    prefer-ip-address: true
