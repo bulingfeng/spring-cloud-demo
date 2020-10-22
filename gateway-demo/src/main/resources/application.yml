@@ -12,5 +12,19 @@ server:
   port: 9001
 
 spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allow-credentials: true
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: service-client
+          uri: lb://service-client
+          predicates:
+            - Path=/client/**
   application:
-    name: gateway-client
+    name: gateway-service
