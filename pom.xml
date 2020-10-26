@@ -20,6 +20,8 @@
         <module>eureka-service</module>
         <module>servicec-lient</module>
         <module>gateway-demo</module>
+        <module>load-balance-service</module>
+        <module>order-id-service</module>
     </modules>
 
     <properties>
