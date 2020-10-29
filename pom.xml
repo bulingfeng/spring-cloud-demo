@@ -22,6 +22,7 @@
         <module>gateway-demo</module>
         <module>load-balance-service</module>
         <module>order-id-service</module>
+        <module>elasticsearch-service</module>
     </modules>
 
     <properties>
