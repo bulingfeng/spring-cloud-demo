@@ -23,6 +23,7 @@
         <module>load-balance-service</module>
         <module>order-id-service</module>
         <module>elasticsearch-service</module>
+        <module>datasource-read-write</module>
     </modules>
 
     <properties>

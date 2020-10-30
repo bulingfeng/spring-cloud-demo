@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bulingfeng.dao2.UserMapper2">
+    <select id="selectOneUser" parameterType="int" resultType="com.bulingfeng.model.User">
+        SELECT
+        t.user_id userId,
+        t.user_age userAge,
+        t.user_sex userSex,
+        t.user_name userName
+        FROM
+        `user` t
+        <where>
+            t.user_id=#{userId}
+        </where>
+    </select>
+</mapper>
