@@ -24,4 +24,9 @@ public class IndexTest extends ElasticsearchTests {
     }
 
 
+    @Test
+    public void deleteIndex() throws IOException {
+        EsIndexUtils.deleteIndex("twitter-1");
+    }
+
 }

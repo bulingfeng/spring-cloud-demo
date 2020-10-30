@@ -45,7 +45,7 @@ public class EsDocumentUtils {
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("user", "bulingfeng");
         jsonMap.put("postDate", new Date());
-        jsonMap.put("document", doc);
+        jsonMap.put("content", doc);
         IndexRequest indexRequest = new IndexRequest(indexName)
                 .id(id).source(jsonMap);
         RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
@@ -95,4 +95,22 @@ public class EsDocumentUtils {
         return client.search(request,RequestOptions.DEFAULT);
     }
 
+    /**
+     *
+     * @param name 搜的字段名称
+     * @param keyWord 关键字
+     * @return
+     * @throws IOException
+     */
+    public static SearchResponse getDocumentByCondition(String indexName,String name,String keyWord) throws IOException {
+        SearchRequest request=new SearchRequest(indexName);
+        SearchSourceBuilder sourceBuilder=new SearchSourceBuilder();
+        sourceBuilder.query(QueryBuilders.termQuery(name, keyWord));
+//        sourceBuilder.from(0);
+//        sourceBuilder.size(5);
+        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
+        request.source(sourceBuilder);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        return client.search(request,RequestOptions.DEFAULT);
+    }
 }

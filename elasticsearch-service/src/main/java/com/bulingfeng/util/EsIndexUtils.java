@@ -1,5 +1,7 @@
 package com.bulingfeng.util;
 
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -34,6 +36,18 @@ public class EsIndexUtils {
         CreateIndexResponse createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
         return true;
     }
+
+
+    public static boolean deleteIndex(String indexName) throws IOException {
+        if (StringUtils.isEmpty(indexName))
+            throw new RuntimeException("索引名称不能为空");
+        DeleteIndexRequest request=new DeleteIndexRequest(indexName);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        AcknowledgedResponse delete = client.indices().delete(request, RequestOptions.DEFAULT);
+        return delete.isAcknowledged();
+    }
+
+    
 
 
 }

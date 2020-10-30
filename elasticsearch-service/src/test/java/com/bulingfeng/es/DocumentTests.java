@@ -29,20 +29,20 @@ public class DocumentTests extends ElasticsearchTests {
 
         int i=1;
         for (String document : documents) {
-            EsDocumentUtils.addDocument("my_index-1",i+"",document);
+            EsDocumentUtils.addDocument("index",i+"",document);
             i++;
         }
     }
 
     @Test
     public void queryAllDocument() throws IOException {
-        SearchResponse searchResponse = EsDocumentUtils.queryAllDocument();
+        SearchResponse searchResponse = EsDocumentUtils.queryAllDocument("twitter");
         System.out.println(searchResponse);
     }
 
     @Test
     public void queryDocumentByCondition() throws IOException {
-        SearchResponse searchResponse = EsDocumentUtils.getDocumentByCondition("document","社交");
+        SearchResponse searchResponse = EsDocumentUtils.getDocumentByCondition("index","content","谷歌");
         System.out.println(searchResponse);
     }
 }
