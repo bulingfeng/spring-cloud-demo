@@ -8,6 +8,9 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.script.ScriptType;
+import org.elasticsearch.script.mustache.SearchTemplateRequest;
+import org.elasticsearch.script.mustache.SearchTemplateResponse;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.io.IOException;
@@ -112,5 +115,31 @@ public class EsDocumentUtils {
         request.source(sourceBuilder);
         RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
         return client.search(request,RequestOptions.DEFAULT);
+    }
+
+    /**
+     * 样板的方式查询
+     * @param indexName
+     * @return
+     */
+    public static SearchTemplateResponse getDocumentByTemplate(String indexName) throws IOException {
+        SearchTemplateRequest request = new SearchTemplateRequest();
+        request.setRequest(new SearchRequest(indexName));
+
+        request.setScriptType(ScriptType.INLINE);
+        request.setScript(
+                "{" +
+                        "  \"query\": { \"match\" : { \"{{field}}\" : \"{{value}}\" } }," +
+                        "  \"size\" : \"{{size}}\"" +
+                        "}");
+
+        Map<String, Object> scriptParams = new HashMap<>();
+        scriptParams.put("field", "content");
+        scriptParams.put("value", "谷歌");
+        scriptParams.put("size", 5);
+        request.setScriptParams(scriptParams);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        SearchTemplateResponse response = client.searchTemplate(request, RequestOptions.DEFAULT);
+        return response;
     }
 }

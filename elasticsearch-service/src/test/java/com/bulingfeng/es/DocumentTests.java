@@ -3,6 +3,7 @@ package com.bulingfeng.es;
 import com.bulingfeng.ElasticsearchTests;
 import com.bulingfeng.util.EsDocumentUtils;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.script.mustache.SearchTemplateResponse;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -42,7 +43,17 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void queryDocumentByCondition() throws IOException {
-        SearchResponse searchResponse = EsDocumentUtils.getDocumentByCondition("index","content","谷歌");
+        SearchResponse searchResponse = EsDocumentUtils.getDocumentByCondition("index","content","取消");
         System.out.println(searchResponse);
+
+//        SearchResponse searchResponse1=EsDocumentUtils.queryAllDocument("index");
+//        System.out.println(searchResponse1);
+
+    }
+
+    @Test
+    public void queryDocByTemplate() throws IOException {
+        SearchTemplateResponse response = EsDocumentUtils.getDocumentByTemplate("index");
+        System.out.println(response.getResponse().getHits().getHits()[0]);
     }
 }
