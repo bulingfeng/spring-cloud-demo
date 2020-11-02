@@ -14,7 +14,7 @@
         </where>
     </select>
 
-    <insert id="insertUser">
+    <insert id="insert">
         insert  into `user`
         (user_id,user_age,user_sex,user_name)
         values

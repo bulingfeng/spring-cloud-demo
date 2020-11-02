@@ -17,6 +17,9 @@ public class UserTest extends DataSourceReadWriteTests {
 
     @Test
     public void testSelect(){
-        userService.getUserInfo();
+        for (int i = 0; i < 10; i++) {
+            userService.getUserInfo();
+            userService.read();
+        }
     }
 }

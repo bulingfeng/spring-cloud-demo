@@ -1,5 +1,6 @@
 package com.bulingfeng.service.impl;
 
+import com.bulingfeng.config.Master;
 import com.bulingfeng.dao.UserMapper;
 import com.bulingfeng.model.User;
 import com.bulingfeng.service.UserService;
@@ -19,29 +20,29 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
 
-
+//    @Master
     @Override
     public User getUserInfo() {
-        write();
-        read();
+        User u=new User();
+        u.setUserName("bulingfeng");
+        u.setUserAge(29);
+        u.setUserSex(1);
+        userMapper.insert(u);
+//        userMapper.selectOneUser(1);
 
 
 
         return null;
     }
 
-    @Transactional(transactionManager = "platformTransactionManager")
+    @Master
     @Override
     public void write(){
-        User u=new User();
-        u.setUserName("bulingfeng");
-        u.setUserAge(29);
-        u.setUserSex(1);
-        userMapper.insertUser(u);
+
     }
 
 
-    @Transactional(transactionManager = "platformTransactionManager2")
+
     @Override
     public void read(){
         for (int i = 0; i <5 ; i++) {

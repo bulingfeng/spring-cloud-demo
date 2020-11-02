@@ -24,12 +24,13 @@ public class DBContextHolder {
 
     public static void master() {
         set(DBTypeEnum.MASTER);
-        System.out.println("切换到master");
+        System.out.println("切换到master"+contextHolder.toString());
     }
 
     public static void slave() {
         set(DBTypeEnum.SLAVE1);
-        System.out.println("切换到slave1");
+        System.out.println("切换到slave1"+contextHolder.toString());
+
     }
 
 }

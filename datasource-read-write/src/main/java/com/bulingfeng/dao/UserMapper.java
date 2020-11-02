@@ -10,5 +10,5 @@ public interface UserMapper {
 
     User selectOneUser(int userId);
 
-    void insertUser(User user);
+    void insert(User user);
 }
