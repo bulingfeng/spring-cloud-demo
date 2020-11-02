@@ -24,6 +24,7 @@
         <module>order-id-service</module>
         <module>elasticsearch-service</module>
         <module>datasource-read-write</module>
+        <module>tika-service</module>
     </modules>
 
     <properties>
