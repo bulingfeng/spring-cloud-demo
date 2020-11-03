@@ -1,9 +1,12 @@
 package com.bulingfeng.util;
 
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
@@ -143,9 +146,19 @@ public class EsDocumentUtils {
         return response;
     }
 
-
-    public static boolean deleteDocument(){
-
+    /**
+     * 根据文档id进行删除操作
+     * @param indexName
+     * @param id
+     * @return
+     */
+    public static boolean deleteDocument(String indexName,String id) throws IOException {
+        DeleteRequest request = new DeleteRequest(
+                indexName,
+                id);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        DeleteResponse deleteResponse = client.delete(
+                request, RequestOptions.DEFAULT);
         return true;
     }
 }

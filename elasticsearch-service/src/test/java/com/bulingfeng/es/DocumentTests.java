@@ -56,4 +56,9 @@ public class DocumentTests extends ElasticsearchTests {
         SearchTemplateResponse response = EsDocumentUtils.getDocumentByTemplate("index");
         System.out.println(response.getResponse().getHits().getHits()[0]);
     }
+
+    @Test
+    public void deleteDocument() throws IOException {
+        EsDocumentUtils.deleteDocument("index","1");
+    }
 }
