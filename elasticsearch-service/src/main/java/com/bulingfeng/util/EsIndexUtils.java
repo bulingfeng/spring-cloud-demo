@@ -6,6 +6,9 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -37,6 +40,16 @@ public class EsIndexUtils {
         return true;
     }
 
+    public static boolean createIndex(String indexName, XContentBuilder builder) throws IOException {
+        if (StringUtils.isEmpty(indexName))
+            throw new IllegalArgumentException("索引名称不能为空");
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        CreateIndexRequest request=new CreateIndexRequest(indexName);
+        request.mapping(builder);
+        CreateIndexResponse createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
+        return true;
+    }
+
 
     public static boolean deleteIndex(String indexName) throws IOException {
         if (StringUtils.isEmpty(indexName))
@@ -47,7 +60,14 @@ public class EsIndexUtils {
         return delete.isAcknowledged();
     }
 
-    
+
+    public static boolean existIndex(String indexName) throws IOException {
+        if (StringUtils.isEmpty(indexName))
+            throw new RuntimeException("索引名称不能为空");
+        GetIndexRequest request=new GetIndexRequest(indexName);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        return client.indices().exists(request,RequestOptions.DEFAULT);
+    }
 
 
 }
