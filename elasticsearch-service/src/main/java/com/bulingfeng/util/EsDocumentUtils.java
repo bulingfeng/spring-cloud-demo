@@ -142,4 +142,10 @@ public class EsDocumentUtils {
         SearchTemplateResponse response = client.searchTemplate(request, RequestOptions.DEFAULT);
         return response;
     }
+
+
+    public static boolean deleteDocument(){
+
+        return true;
+    }
 }

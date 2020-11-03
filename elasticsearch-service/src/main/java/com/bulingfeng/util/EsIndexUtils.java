@@ -47,7 +47,7 @@ public class EsIndexUtils {
         CreateIndexRequest request=new CreateIndexRequest(indexName);
         request.mapping(builder);
         CreateIndexResponse createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
-        return true;
+        return createIndexResponse.isAcknowledged();
     }
 
 

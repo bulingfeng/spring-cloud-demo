@@ -81,7 +81,7 @@ public class IndexTest extends ElasticsearchTests {
         }
         builder.endObject();
 
-        EsIndexUtils.createIndex("index-20201103",builder);
+        EsIndexUtils.createIndex("index1-20201103",builder);
     }
 
 }

@@ -44,7 +44,7 @@ public class DocumentTests extends ElasticsearchTests {
     @Test
     public void queryDocumentByCondition() throws IOException {
         SearchResponse searchResponse = EsDocumentUtils.getDocumentByCondition("index","content","取消");
-        System.out.println(searchResponse);
+        System.out.println(searchResponse.getHits().getHits()[0]);
 
 //        SearchResponse searchResponse1=EsDocumentUtils.queryAllDocument("index");
 //        System.out.println(searchResponse1);
