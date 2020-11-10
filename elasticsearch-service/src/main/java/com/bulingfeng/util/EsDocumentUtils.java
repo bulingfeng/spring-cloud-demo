@@ -7,6 +7,8 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
@@ -160,5 +162,16 @@ public class EsDocumentUtils {
         DeleteResponse deleteResponse = client.delete(
                 request, RequestOptions.DEFAULT);
         return true;
+    }
+
+
+    public static UpdateResponse updateDocumentById(String index,String id,Map<String,Object> jsonMap) throws IOException {
+
+        UpdateRequest request = new UpdateRequest(index, id)
+                .doc(jsonMap);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        UpdateResponse updateResponse = client.update(
+                request, RequestOptions.DEFAULT);
+        return updateResponse;
     }
 }

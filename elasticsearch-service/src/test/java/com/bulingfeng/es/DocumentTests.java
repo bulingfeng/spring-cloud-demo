@@ -4,6 +4,7 @@ import com.bulingfeng.ElasticsearchTests;
 import com.bulingfeng.util.EsDocumentUtils;
 import com.bulingfeng.util.EsIndexUtils;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.script.mustache.SearchTemplateResponse;
@@ -11,7 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author:bulingfeng
@@ -96,5 +99,13 @@ public class DocumentTests extends ElasticsearchTests {
     @Test
     public void deleteDocument() throws IOException {
         EsDocumentUtils.deleteDocument("index","1");
+    }
+
+    @Test
+    public void updateDocument() throws IOException {
+        Map<String,Object> map=new HashMap<>();
+        map.put("user","bulingfeng-1");
+        UpdateResponse response = EsDocumentUtils.updateDocumentById("twitter", "2", map);
+        System.out.println(response);
     }
 }
