@@ -27,9 +27,19 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void createIndex() throws IOException {
+        String indexName="index-test-20201110";
         XContentBuilder builder = XContentFactory.jsonBuilder();
         builder.startObject();
         {
+            // 设置mappings
+                builder.startObject("_source");
+                {
+                    builder.field("includes",new String[]{"postDate","user"});
+                    builder.field("excludes",new String[]{"content"});
+                }
+                builder.endObject();
+
+
             builder.startObject("properties");
             {
                 // 1、内容字段设置mapping
@@ -55,7 +65,7 @@ public class DocumentTests extends ElasticsearchTests {
         }
         builder.endObject();
 
-        EsIndexUtils.createIndex("index-test-20201105",builder);
+        EsIndexUtils.createIndex(indexName,builder);
     }
 
     @Test
@@ -69,7 +79,7 @@ public class DocumentTests extends ElasticsearchTests {
 
         int i=1;
         for (String document : documents) {
-            EsDocumentUtils.addDocument("index-test-20201106",i+"",document);
+            EsDocumentUtils.addDocument("index-test-20201110",i+"",document);
             i++;
         }
     }
@@ -104,8 +114,9 @@ public class DocumentTests extends ElasticsearchTests {
     @Test
     public void updateDocument() throws IOException {
         Map<String,Object> map=new HashMap<>();
-        map.put("user","bulingfeng-1");
-        UpdateResponse response = EsDocumentUtils.updateDocumentById("twitter", "2", map);
+        map.put("user","bulingfeng-20201110");
+        map.put("content","谷歌地图创始人拉斯离开谷歌加盟facebook");
+        UpdateResponse response = EsDocumentUtils.updateDocumentById("index-test-20201110", "3", map);
         System.out.println(response);
     }
 }
