@@ -7,6 +7,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.script.mustache.SearchTemplateResponse;
 import org.junit.jupiter.api.Test;
 
@@ -53,9 +55,10 @@ public class DocumentTests extends ElasticsearchTests {
                 // 2、标题设置mapping
                 builder.startObject("user");
                 {
-                    builder.field("type", "text");
-                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
-                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
+                    builder.field("type", "keyword");
+//                    builder.field("type", "text");
+//                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
+//                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
                 }
                 builder.endObject();
 
@@ -118,5 +121,15 @@ public class DocumentTests extends ElasticsearchTests {
         map.put("content","谷歌地图创始人拉斯离开谷歌加盟facebook");
         UpdateResponse response = EsDocumentUtils.updateDocumentById("index-test-20201110", "3", map);
         System.out.println(response);
+    }
+
+
+
+    @Test
+    public void scrollBoolSearchTest(){
+        BoolQueryBuilder boolQueryBuilder= QueryBuilders.boolQuery()
+                .must(QueryBuilders.matchAllQuery());
+
+                EsDocumentUtils.scrollqueryByCondition(boolQueryBuilder,"index-test-20201110");
     }
 }
