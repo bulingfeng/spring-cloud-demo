@@ -29,7 +29,7 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void createIndex() throws IOException {
-        String indexName="index-test-20201110";
+        String indexName="index-test-20201111";
         XContentBuilder builder = XContentFactory.jsonBuilder();
         builder.startObject();
         {
@@ -73,6 +73,7 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void insertDocumentToEs() throws IOException {
+        String index="index-test-20201111";
         List<String> documents= Arrays.asList("谷歌地图之父跳槽facebook",
                 "谷歌地图之父加盟facebook",
                 "谷歌地图创始人拉斯离开谷歌加盟facebook",
@@ -82,8 +83,15 @@ public class DocumentTests extends ElasticsearchTests {
 
         int i=1;
         for (String document : documents) {
-            EsDocumentUtils.addDocument("index-test-20201110",i+"",document);
+            EsDocumentUtils.addDocument(index,i+"",document);
             i++;
+        }
+
+
+        while (true){
+            EsDocumentUtils.addDocument(index,i+"",null);
+            i++;
+            if (i==10) return;
         }
     }
 
