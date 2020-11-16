@@ -133,11 +133,4 @@ public class DocumentTests extends ElasticsearchTests {
 
 
 
-    @Test
-    public void scrollBoolSearchTest(){
-        BoolQueryBuilder boolQueryBuilder= QueryBuilders.boolQuery()
-                .must(QueryBuilders.matchAllQuery());
-
-                EsDocumentUtils.scrollqueryByCondition(boolQueryBuilder,"index-test-20201110");
-    }
 }

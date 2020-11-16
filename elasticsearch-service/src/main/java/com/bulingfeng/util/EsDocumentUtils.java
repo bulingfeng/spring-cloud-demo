@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+
 /**
  * @Author:bulingfeng
  * @Date: 2020-10-29
@@ -178,71 +181,38 @@ public class EsDocumentUtils {
         return updateResponse;
     }
 
-    /**
-     * 使用滚动查询
-     * @param queryBuilder
-     * @param index
-     */
-    /**
-     * bool查询
-     */
-    public static   void scrollqueryByCondition(QueryBuilder queryBuilder, String... index) {
-        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+
+    public static void scorllSearch(String... index) throws IOException {
         final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));
-        SearchRequest searchRequest=null;
-        if (index==null || index.length==0){
-            searchRequest=new SearchRequest();
-        }else {
-            searchRequest=new SearchRequest(index);
-        }
+        SearchRequest searchRequest = new SearchRequest(index);
         searchRequest.scroll(scroll);
-
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-
-        searchSourceBuilder.query(queryBuilder);
+        searchSourceBuilder.query(matchAllQuery());
+        searchSourceBuilder.size(1);
         searchRequest.source(searchSourceBuilder);
-
-
-        SearchResponse searchResponse = null;
-        try {
-            searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            // TODO 自动生成的 catch 块
-            e.printStackTrace();
-        }
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
         String scrollId = searchResponse.getScrollId();
+
+        // 这里为第一次查询
         SearchHit[] searchHits = searchResponse.getHits().getHits();
-        int page = 1;
+
+        int queryCount=1;
         while (searchHits != null && searchHits.length > 0) {
 
             SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
             scrollRequest.scroll(scroll);
-            try {
-                searchResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            searchResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
             scrollId = searchResponse.getScrollId();
             searchHits = searchResponse.getHits().getHits();
-            if (searchHits != null && searchHits.length > 0) {
-                page++;
-                System.out.println("第"+page+"页");
-                Arrays.asList(searchHits).stream().map(h -> h.getSourceAsString()).forEach(System.out::println);
-            }
+            System.out.println("第"+(++queryCount)+"次查询，数据为:"+searchHits[0]);
         }
 
         ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
         clearScrollRequest.addScrollId(scrollId);
-        ClearScrollResponse clearScrollResponse;
-        try {
-            clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
-            boolean succeeded = clearScrollResponse.isSucceeded();
-            System.out.println("清除滚屏是否成功:" + succeeded);
-        } catch (IOException e) {
-            // TODO 自动生成的 catch 块
-            e.printStackTrace();
-        }
-
+        ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+        boolean succeeded = clearScrollResponse.isSucceeded();
     }
+
 
 }
