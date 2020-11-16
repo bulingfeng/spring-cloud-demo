@@ -4,11 +4,9 @@ import com.bulingfeng.ElasticsearchTests;
 import com.bulingfeng.util.EsDocumentUtils;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
