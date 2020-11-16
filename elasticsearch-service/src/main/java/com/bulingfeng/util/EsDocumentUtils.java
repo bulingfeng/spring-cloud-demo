@@ -1,5 +1,7 @@
 package com.bulingfeng.util;
 
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -211,4 +213,15 @@ public class EsDocumentUtils {
     }
 
 
+    /**
+     * @link({https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-bulk.html})
+     * @detail
+     *  A BulkRequest can be used to execute multiple index,
+     *  update and/or delete operations using a single request.
+     **/
+
+    public static void bulkApi(BulkRequest bulkRequest) throws IOException {
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        BulkResponse bulkResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+    }
 }
