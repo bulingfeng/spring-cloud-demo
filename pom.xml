@@ -25,6 +25,7 @@
         <module>elasticsearch-service</module>
         <module>datasource-read-write</module>
         <module>tika-service</module>
+        <module>log-service</module>
     </modules>
 
     <properties>

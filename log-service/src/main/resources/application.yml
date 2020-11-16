@@ -1,0 +1,9 @@
+server:
+  port: 8899
+
+
+log:
+  path: /Users/bulingfeng/Desktop/log
+
+logging:
+  config: classpath:logback-dev.xml
