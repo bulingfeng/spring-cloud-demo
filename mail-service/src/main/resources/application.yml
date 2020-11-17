@@ -1,0 +1,11 @@
+spring:
+  mail:
+    host: imap.exmail.qq.com
+    port: 993
+    username: 企业邮箱账号
+    password: 密码
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      mail.smtp.socketFactory.fallback: false
+      mail.smtp.socketFactory.port: 465
