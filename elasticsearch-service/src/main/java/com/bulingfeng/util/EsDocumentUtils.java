@@ -21,9 +21,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
@@ -180,7 +178,9 @@ public class EsDocumentUtils {
     }
 
 
-    public static void scorllSearch(String... index) throws IOException {
+    public static List<SearchHit> scorllSearch(int count,String... index) throws IOException {
+        List<SearchHit> result=new ArrayList<>();
+
         final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));
         SearchRequest searchRequest = new SearchRequest(index);
         searchRequest.scroll(scroll);
@@ -195,21 +195,25 @@ public class EsDocumentUtils {
         // 这里为第一次查询
         SearchHit[] searchHits = searchResponse.getHits().getHits();
 
-        int queryCount=1;
+        int addCount=0;
         while (searchHits != null && searchHits.length > 0) {
-
+            for (int i = 0; i < searchHits.length; i++) {
+                result.add(searchHits[i]);
+                if (++addCount>=count){
+                    return result;
+                }
+            }
             SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
             scrollRequest.scroll(scroll);
             searchResponse = client.scroll(scrollRequest, RequestOptions.DEFAULT);
             scrollId = searchResponse.getScrollId();
             searchHits = searchResponse.getHits().getHits();
-            System.out.println("第"+(++queryCount)+"次查询，数据为:"+searchHits[0]);
         }
 
         ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
         clearScrollRequest.addScrollId(scrollId);
         ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
-        boolean succeeded = clearScrollResponse.isSucceeded();
+        return result;
     }
 
 
