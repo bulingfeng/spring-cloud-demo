@@ -91,7 +91,7 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void queryAllDocument() throws IOException {
-        SearchResponse searchResponse = EsDocumentUtils.queryAllDocument("twitter");
+        SearchResponse searchResponse = EsDocumentUtils.queryAllDocument("index-test-20201106-alias");
         System.out.println(searchResponse);
     }
 

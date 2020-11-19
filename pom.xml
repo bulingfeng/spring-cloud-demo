@@ -27,6 +27,7 @@
         <module>tika-service</module>
         <module>log-service</module>
         <module>mail-service</module>
+        <module>schedule-service</module>
     </modules>
 
     <properties>

@@ -1,5 +1,6 @@
 package com.bulingfeng.util;
 
+import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -7,6 +8,7 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.*;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -227,5 +229,24 @@ public class EsDocumentUtils {
     public static void bulkApi(BulkRequest bulkRequest) throws IOException {
         RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
         BulkResponse bulkResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+    }
+
+    /**
+     * 单个索引对应单个别名
+     * @link{参考:https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-update-aliases.html}
+     * @param aliasName
+     * @param index
+     * @throws IOException
+     */
+    public static void aliaseWithOneIndex(String aliasName,String index) throws IOException {
+        IndicesAliasesRequest request = new IndicesAliasesRequest();
+        IndicesAliasesRequest.AliasActions aliasAction =
+                new IndicesAliasesRequest.AliasActions(IndicesAliasesRequest.AliasActions.Type.ADD)
+                        .index(index)
+                        .alias(aliasName);
+        request.addAliasAction(aliasAction);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        AcknowledgedResponse indicesAliasesResponse =
+        client.indices().updateAliases(request, RequestOptions.DEFAULT);
     }
 }
