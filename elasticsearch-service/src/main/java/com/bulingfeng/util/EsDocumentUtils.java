@@ -57,7 +57,7 @@ public class EsDocumentUtils {
     public static void addDocument(String indexName,String id,Object doc) throws IOException {
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("user", "bulingfeng");
-        jsonMap.put("postDate", new Date());
+//        jsonMap.put("postDate", new Date());
         jsonMap.put("content", doc);
         IndexRequest indexRequest = new IndexRequest(indexName)
                 .id(id).source(jsonMap);

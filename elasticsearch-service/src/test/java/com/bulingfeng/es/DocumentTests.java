@@ -73,20 +73,18 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void insertDocumentToEs() throws IOException {
-        String index="index-test-20201106";
+        String index="index-2020-index";
         List<String> documents= Arrays.asList("谷歌地图之父跳槽facebook",
                 "谷歌地图之父加盟facebook",
                 "谷歌地图创始人拉斯离开谷歌加盟facebook",
                 "谷歌地图之父跳槽facebook与wave项目取消有关",
                 "谷歌地图之父拉斯加盟社交网站facebook"
                 );
-
         int i=11;
         for (String document : documents) {
             EsDocumentUtils.addDocument(index,i+"",document);
             i++;
         }
-
     }
 
     @Test
