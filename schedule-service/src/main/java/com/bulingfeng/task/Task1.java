@@ -15,6 +15,11 @@ import org.springframework.stereotype.Component;
 public class Task1 implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+//        System.exit(1);
+
+
+
         Runnable runnable1=()->{
             while (true){
                 excute1();
