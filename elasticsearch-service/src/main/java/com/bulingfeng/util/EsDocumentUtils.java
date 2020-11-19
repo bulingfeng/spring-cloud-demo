@@ -1,6 +1,7 @@
 package com.bulingfeng.util;
 
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
+import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -248,5 +249,24 @@ public class EsDocumentUtils {
         RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
         AcknowledgedResponse indicesAliasesResponse =
         client.indices().updateAliases(request, RequestOptions.DEFAULT);
+    }
+
+    public static boolean existAliasWithIndex(String index,String aliasName) throws IOException {
+        GetAliasesRequest request = new GetAliasesRequest();
+        request.aliases(aliasName);
+        request.indices(index);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        boolean exists = client.indices().existsAlias(request, RequestOptions.DEFAULT);
+        return exists;
+    }
+
+
+    public static boolean existAliasWithIndexs(String[] index,String[] aliasName) throws IOException {
+        GetAliasesRequest request = new GetAliasesRequest();
+        request.aliases(aliasName);
+        request.indices(index);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        boolean exists = client.indices().existsAlias(request, RequestOptions.DEFAULT);
+        return exists;
     }
 }
