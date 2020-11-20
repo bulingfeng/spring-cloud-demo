@@ -29,6 +29,7 @@
         <module>mail-service</module>
         <module>schedule-service</module>
         <module>assemblly-service</module>
+        <module>parse-file</module>
     </modules>
 
     <properties>

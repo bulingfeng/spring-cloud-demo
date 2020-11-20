@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import java.io.*;
 
-import static org.junit.Assert.assertEquals;
 
 /**
  * @Author:bulingfeng
@@ -24,7 +23,7 @@ public class TikaTest extends TikaServiceTests {
     @Test
     public void whenUsingDetector_thenDocumentTypeIsReturned() throws IOException, TikaException, SAXException {
         InputStream stream = this.getClass().getClassLoader()
-                .getResourceAsStream("thymeleafspring.pdf");
+                .getResourceAsStream("带文字的pdf.pdf");
         String mediaType = TikaAnalysis.detectDocTypeUsingFacade(stream);
         String content=TikaAnalysis.extractContentUsingParser(stream);
         System.out.println("文件类型为:"+mediaType);
@@ -37,7 +36,7 @@ public class TikaTest extends TikaServiceTests {
     public void readImage() throws TikaException, IOException, SAXException {
         // 解析图片 不成功
         InputStream stream = this.getClass().getClassLoader()
-                .getResourceAsStream("image/11.jpg");
+                .getResourceAsStream("新浪.png");
         String mediaType = TikaAnalysis.detectDocTypeUsingFacade(stream);
         String content=TikaAnalysis.extractContentUsingParser(stream);
         System.out.println("文件类型为:"+mediaType);
@@ -64,4 +63,25 @@ public class TikaTest extends TikaServiceTests {
 //        }
     }
 
+    @Test
+    public void readDocWithImage() throws IOException, TikaException, SAXException {
+        InputStream stream = this.getClass().getClassLoader()
+                .getResourceAsStream("新浪首页.pdf");
+//        InputStream stream=new FileInputStream("/Users/bulingfeng/Desktop/files/这是图片前的文字.docx");
+        String mediaType = TikaAnalysis.detectDocTypeUsingFacade(stream);
+        String content=TikaAnalysis.extractContentUsingParser(stream);
+        System.out.println("文件类型为:"+mediaType);
+        System.out.println("文件的内容为:"+content);
+    }
+
+
+    @Test
+    public void readExcel() throws IOException, TikaException, SAXException {
+        InputStream stream = this.getClass().getClassLoader()
+                .getResourceAsStream("打工人.xlsx");
+        String mediaType = TikaAnalysis.detectDocTypeUsingFacade(stream);
+        String content=TikaAnalysis.extractContentUsingParser(stream);
+        System.out.println("文件类型为:"+mediaType);
+        System.out.println("文件的内容为:"+content);
+    }
 }
