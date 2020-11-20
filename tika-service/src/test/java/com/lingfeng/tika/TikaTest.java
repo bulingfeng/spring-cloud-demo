@@ -36,7 +36,7 @@ public class TikaTest extends TikaServiceTests {
     public void readImage() throws TikaException, IOException, SAXException {
         // 解析图片 不成功
         InputStream stream = this.getClass().getClassLoader()
-                .getResourceAsStream("新浪.png");
+                .getResourceAsStream("test.pptx");
         String mediaType = TikaAnalysis.detectDocTypeUsingFacade(stream);
         String content=TikaAnalysis.extractContentUsingParser(stream);
         System.out.println("文件类型为:"+mediaType);
