@@ -22,9 +22,6 @@
     </dependencies>
 
 
-    <name>assembly-demo</name>
-    <url>http://maven.apache.org</url>
-
     <!--将应用打包成可执行jar包-->
     <build>
         <plugins>
