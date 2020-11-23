@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentParser;
@@ -16,16 +17,18 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.script.ScriptType;
+import org.elasticsearch.script.mustache.SearchTemplateRequest;
 import org.elasticsearch.script.mustache.SearchTemplateResponse;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author:bulingfeng
@@ -137,17 +140,68 @@ public class DocumentTests extends ElasticsearchTests {
         String indexName="index-test-20201120";
         SearchRequest searchRequest = new SearchRequest(indexName);
         SearchSourceBuilder sourceBuilder=new SearchSourceBuilder();
-        sourceBuilder.query(QueryBuilders.termQuery("user","bulingfeng"));
+        sourceBuilder.query(QueryBuilders.matchQuery("content","加盟"));
         HighlightBuilder highlightBuilder=new HighlightBuilder();
-        highlightBuilder.field("user");
+        highlightBuilder.field("content");
         sourceBuilder.highlighter(highlightBuilder);
         System.out.println(sourceBuilder);
         RestHighLevelClient client= EsClientUtils.getRestHighLevelClient();
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
         System.out.println("内容:"+searchResponse);
 
+        printHightLightWord(searchResponse);
 
     }
 
+    @Test
+    public void hightTest() throws IOException {
+        String indexName="index-test-20201120";
+        SearchRequest searchRequest = new SearchRequest(indexName);
 
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.highlighter(SearchSourceBuilder.highlight().field("content"));
+        searchSourceBuilder.query(QueryBuilders.matchQuery("content","加盟"));
+
+        RestHighLevelClient client= EsClientUtils.getRestHighLevelClient();
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        System.out.println("内容:"+searchResponse);
+
+        printHightLightWord(searchResponse);
+    }
+
+
+    private void printHightLightWord(SearchResponse searchResponse){
+        SearchHits hits = searchResponse.getHits();
+        for (SearchHit hit : hits.getHits()) {
+            Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+            HighlightField highlight = highlightFields.get("content");
+            Text[] fragments = highlight.fragments();
+            String fragmentString = fragments[0].string();
+            System.out.println(fragmentString);
+        }
+    }
+
+
+
+    @Test
+    public void hightLightTemplate() throws IOException {
+        String indexName="index-test-20201120";
+        SearchTemplateRequest request = new SearchTemplateRequest();
+        request.setRequest(new SearchRequest(indexName));
+
+        request.setScriptType(ScriptType.INLINE);
+        request.setScript("{\"query\":{\"match\":{\"content\":\"加盟\"}},\"highlight\":{\"fields\":{\"content\":{}}}}");
+
+        Map<String, Object> scriptParams = new HashMap<>();
+        scriptParams.put("field", "content");
+        scriptParams.put("value", "谷歌");
+        scriptParams.put("size", 5);
+        request.setScriptParams(scriptParams);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        SearchTemplateResponse response = client.searchTemplate(request, RequestOptions.DEFAULT);
+        System.out.println("response:"+response);
+
+        printHightLightWord(response.getResponse());
+    }
 }
