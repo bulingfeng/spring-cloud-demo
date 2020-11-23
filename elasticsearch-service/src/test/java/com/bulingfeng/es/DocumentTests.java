@@ -10,6 +10,7 @@ import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentParser;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author:bulingfeng
@@ -107,7 +109,7 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void queryDocumentByCondition() throws IOException {
-        SearchResponse searchResponse = EsDocumentUtils.getDocumentByCondition("index-test-20201105","user","bulingfeng");
+        SearchResponse searchResponse = EsDocumentUtils.getDocumentByCondition("index-test-20201120","user","bulingfeng");
         System.out.println(searchResponse.getHits().getHits()[0]);
 
 //        SearchResponse searchResponse1=EsDocumentUtils.queryAllDocument("index");
@@ -156,16 +158,21 @@ public class DocumentTests extends ElasticsearchTests {
     @Test
     public void hightTest() throws IOException {
         String indexName="index-test-20201120";
+        String name="user";
+        String keyWord="bulingfeng";
         SearchRequest searchRequest = new SearchRequest(indexName);
-
-
+//
+//
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.highlighter(SearchSourceBuilder.highlight().field("content"));
-        searchSourceBuilder.query(QueryBuilders.matchQuery("content","加盟"));
-
+        searchSourceBuilder.query(QueryBuilders.termQuery(name, keyWord));
+        HighlightBuilder highlightBuilder=new HighlightBuilder();
+        highlightBuilder.field(name);
+        searchSourceBuilder.highlighter(highlightBuilder);
         RestHighLevelClient client= EsClientUtils.getRestHighLevelClient();
+        searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-        System.out.println("内容:"+searchResponse);
+        System.out.println("内容:"+searchResponse.getHits().getHits()[0]);
+
 
         printHightLightWord(searchResponse);
     }
@@ -175,7 +182,7 @@ public class DocumentTests extends ElasticsearchTests {
         SearchHits hits = searchResponse.getHits();
         for (SearchHit hit : hits.getHits()) {
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
-            HighlightField highlight = highlightFields.get("content");
+            HighlightField highlight = highlightFields.get("user");
             Text[] fragments = highlight.fragments();
             String fragmentString = fragments[0].string();
             System.out.println(fragmentString);

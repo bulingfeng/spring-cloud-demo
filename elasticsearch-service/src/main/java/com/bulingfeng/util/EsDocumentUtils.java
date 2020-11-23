@@ -23,6 +23,7 @@ import org.elasticsearch.script.mustache.SearchTemplateResponse;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 
 import java.io.IOException;
 import java.util.*;
@@ -120,6 +121,9 @@ public class EsDocumentUtils {
         SearchRequest request=new SearchRequest(indexName);
         SearchSourceBuilder sourceBuilder=new SearchSourceBuilder();
         sourceBuilder.query(QueryBuilders.termQuery(name, keyWord));
+        HighlightBuilder highlightBuilder=new HighlightBuilder();
+        highlightBuilder.field("user");
+        sourceBuilder.highlighter(highlightBuilder);
 //        sourceBuilder.from(0);
 //        sourceBuilder.size(5);
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
