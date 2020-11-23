@@ -15,6 +15,7 @@ import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.script.mustache.SearchTemplateRequest;
@@ -125,6 +126,27 @@ public class EsDocumentUtils {
         request.source(sourceBuilder);
         RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
         return client.search(request,RequestOptions.DEFAULT);
+    }
+
+
+    public static SearchResponse queryByCondition(SearchSourceBuilder sourceBuilder,Integer size,String... index) throws IOException {
+        SearchRequest searchRequest=null;
+        if (index==null || index.length==0){
+            searchRequest=new SearchRequest();
+        }else {
+            searchRequest=new SearchRequest(index);
+        }
+//        SearchSourceBuilder sourceBuilder=new SearchSourceBuilder();
+//        sourceBuilder.query(queryBuilder);
+        searchRequest.source(sourceBuilder);
+        if (size==null || size<=0){
+            size=100;
+        }
+        sourceBuilder.from(0);
+        sourceBuilder.size(size);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        SearchResponse search = client.search(searchRequest, RequestOptions.DEFAULT);
+        return search;
     }
 
     /**

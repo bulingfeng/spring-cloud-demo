@@ -1,15 +1,24 @@
 package com.bulingfeng.es;
 
 import com.bulingfeng.ElasticsearchTests;
+import com.bulingfeng.util.EsClientUtils;
 import com.bulingfeng.util.EsDocumentUtils;
 import com.bulingfeng.util.EsIndexUtils;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.script.mustache.SearchTemplateResponse;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -29,17 +38,17 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void createIndex() throws IOException {
-        String indexName="index-test-20201111";
+        String indexName="index-test-20201120";
         XContentBuilder builder = XContentFactory.jsonBuilder();
         builder.startObject();
         {
             // 设置mappings
-                builder.startObject("_source");
-                {
-                    builder.field("includes",new String[]{"postDate","user"});
-                    builder.field("excludes",new String[]{"content"});
-                }
-                builder.endObject();
+//                builder.startObject("_source");
+//                {
+//                    builder.field("includes",new String[]{"postDate","user"});
+//                    builder.field("excludes",new String[]{"content"});
+//                }
+//                builder.endObject();
 
 
             builder.startObject("properties");
@@ -73,7 +82,7 @@ public class DocumentTests extends ElasticsearchTests {
 
     @Test
     public void insertDocumentToEs() throws IOException {
-        String index="index-2020-index";
+        String index="index-test-20201120";
         List<String> documents= Arrays.asList("谷歌地图之父跳槽facebook",
                 "谷歌地图之父加盟facebook",
                 "谷歌地图创始人拉斯离开谷歌加盟facebook",
@@ -123,6 +132,22 @@ public class DocumentTests extends ElasticsearchTests {
         System.out.println(response);
     }
 
+    @Test
+    public void hightlightview() throws IOException {
+        String indexName="index-test-20201120";
+        SearchRequest searchRequest = new SearchRequest(indexName);
+        SearchSourceBuilder sourceBuilder=new SearchSourceBuilder();
+        sourceBuilder.query(QueryBuilders.termQuery("user","bulingfeng"));
+        HighlightBuilder highlightBuilder=new HighlightBuilder();
+        highlightBuilder.field("user");
+        sourceBuilder.highlighter(highlightBuilder);
+        System.out.println(sourceBuilder);
+        RestHighLevelClient client= EsClientUtils.getRestHighLevelClient();
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        System.out.println("内容:"+searchResponse);
+
+
+    }
 
 
 }
