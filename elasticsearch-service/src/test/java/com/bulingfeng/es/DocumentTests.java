@@ -10,13 +10,8 @@ import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.script.mustache.SearchTemplateRequest;
@@ -29,8 +24,10 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author:bulingfeng
@@ -85,9 +82,67 @@ public class DocumentTests extends ElasticsearchTests {
         EsIndexUtils.createIndex(indexName,builder);
     }
 
+
+    @Test
+    public void createIndex2() throws IOException {
+        String indexName="index-test-20201124";
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        builder.startObject();
+        {
+            // 设置mappings
+            builder.startObject("_source");
+            {
+
+                builder.field("enabled",false);
+            }
+            builder.endObject();
+
+
+            builder.startObject("properties");
+            {
+                // 1、内容字段设置mapping
+                builder.startObject("content");
+                {
+                    builder.field("store",false);
+                    builder.field("type", "text");
+                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
+                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
+                }
+                builder.endObject();
+                // 2、标题设置mapping
+                builder.startObject("user");
+                {
+                    builder.field("type", "keyword");
+                    builder.field("store",true);
+//                    builder.field("type", "text");
+//                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
+//                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
+                }
+                builder.endObject();
+
+
+                // 2、标题设置mapping
+                builder.startObject("postDate");
+                {
+                    builder.field("type", "keyword");
+                    builder.field("store",true);
+//                    builder.field("type", "text");
+//                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
+//                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
+                }
+                builder.endObject();
+
+            }
+            builder.endObject();
+        }
+        builder.endObject();
+
+        EsIndexUtils.createIndex(indexName,builder);
+    }
+
     @Test
     public void insertDocumentToEs() throws IOException {
-        String index="index-test-20201120";
+        String index="index-test-20201124";
         List<String> documents= Arrays.asList("谷歌地图之父跳槽facebook",
                 "谷歌地图之父加盟facebook",
                 "谷歌地图创始人拉斯离开谷歌加盟facebook",

@@ -84,4 +84,63 @@ public class IndexTest extends ElasticsearchTests {
         EsIndexUtils.createIndex("index-test-20201105",builder);
     }
 
+
+    @Test
+    public void createIndex3() throws IOException {
+        String indexName="index-test-20201124";
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+
+        builder.startObject();
+        {
+            builder.startObject("_source");
+            builder.field("enabled",false);
+            builder.endObject();
+        }
+        builder.endObject();
+
+        builder.startObject();
+        {
+            builder.startObject("properties");
+            {
+//                // 1、内容字段设置mapping
+//                builder.startObject("content");
+//                {
+//                    builder.field("type", "text");
+//                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
+//                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
+//                }
+//                builder.endObject();
+
+
+                // 1、内容字段设置mapping
+                builder.startObject("content");
+                {
+                    builder.field("type", "text");
+                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
+                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
+                }
+                builder.endObject();
+
+                // 2、标题设置mapping
+                builder.startObject("title");
+                {
+                    builder.field("type", "text");
+                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
+                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
+                }
+                builder.endObject();
+
+
+
+
+
+
+            }
+            builder.endObject();
+        }
+        builder.endObject();
+
+        EsIndexUtils.createIndex(indexName,builder);
+    }
+
 }
