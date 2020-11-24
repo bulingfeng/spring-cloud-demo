@@ -91,6 +91,23 @@ public class EsDocumentUtils {
         return searchResponse;
     }
 
+
+    /**
+     * SearchSourceBuilder的查询
+     * @param indexName
+     * @param searchSourceBuilder
+     * @return
+     * @throws IOException
+     */
+    public static SearchResponse queryDocument(String indexName,SearchSourceBuilder searchSourceBuilder) throws IOException {
+        SearchRequest searchRequest = new SearchRequest(indexName);
+        searchRequest.source(searchSourceBuilder);
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        client.close();
+        return searchResponse;
+    }
+
     /**
      *
      * @param name 搜的字段名称

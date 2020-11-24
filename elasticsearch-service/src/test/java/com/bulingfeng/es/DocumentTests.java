@@ -113,7 +113,7 @@ public class DocumentTests extends ElasticsearchTests {
                 builder.startObject("user");
                 {
                     builder.field("type", "keyword");
-                    builder.field("store",true);
+                    builder.field("store",false);
 //                    builder.field("type", "text");
 //                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
 //                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
@@ -125,7 +125,7 @@ public class DocumentTests extends ElasticsearchTests {
                 builder.startObject("postDate");
                 {
                     builder.field("type", "keyword");
-                    builder.field("store",true);
+                    builder.field("store",false);
 //                    builder.field("type", "text");
 //                    builder.field("analyzer", "ik_max_word");// 分析的时候使用最大颗粒度
 //                    builder.field("search_analyzer", "ik_smart"); // 搜寻的时候使用最小颗粒度
@@ -269,8 +269,30 @@ public class DocumentTests extends ElasticsearchTests {
 
 
     @Test
-    public void sourceBuilderTest(){
-        SearchSourceBuilder searchSourceBuilder=new SearchSourceBuilder();
-//        searchSourceBuilder.storedFields()
+    public void sourceBuilderTest() throws IOException {
+        String indexName="2020-11-24";
+        XContentBuilder xContentBuilder = EsIndexUtils.elasticSearchMapping();
+        EsIndexUtils.createIndex(indexName,xContentBuilder);
+
+    }
+
+    @Test
+    public void queryBySearchSourceBuilder() throws IOException {
+        String indexName="index-test-20201124";
+        SearchSourceBuilder sourceBuilder=new SearchSourceBuilder();
+        sourceBuilder.query(QueryBuilders.matchQuery("user","bulingfeng"));
+        sourceBuilder.storedFields(Arrays.asList("postDate","user"));
+        SearchResponse searchResponse = EsDocumentUtils.queryDocument(indexName, sourceBuilder);
+        System.out.println("内容:"+searchResponse.getHits().getHits());
+
+        resoveStoredFields(searchResponse.getHits().getHits());
+    }
+
+
+    private void resoveStoredFields(SearchHit[] searchHits){
+        for (SearchHit searchHit : searchHits) {
+            System.out.println(searchHit.getFields().get("postDate").getName());
+            System.out.println(searchHit.getFields().get("postDate").getValues().get(0));
+        }
     }
 }

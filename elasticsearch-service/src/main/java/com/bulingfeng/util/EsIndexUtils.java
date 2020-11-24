@@ -70,4 +70,75 @@ public class EsIndexUtils {
     }
 
 
+
+    public static XContentBuilder elasticSearchMapping() throws IOException {
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        builder.startObject();
+        {
+            builder.startObject("_source");
+            {
+                builder.field("enabled",false);
+            }
+            builder.endObject();
+
+
+            builder.startObject("properties");
+            {
+                builder.startObject("fileType");
+                {
+                    builder.field("type", "keyword");
+                    builder.field("store",true);
+                }
+                builder.endObject();
+
+                builder.startObject("content");
+                {
+                    builder.field("type", "text");
+                    builder.field("analyzer", "ik_max_word");
+                    builder.field("search_analyzer", "ik_smart");
+                    builder.field("store",false);
+                }
+                builder.endObject();
+
+
+                builder.startObject("fileName");
+                {
+                    builder.field("type", "text");
+                    builder.field("analyzer", "ik_max_word");
+                    builder.field("search_analyzer", "ik_max_word");
+                    builder.field("store",true);
+                }
+                builder.endObject();
+
+
+
+                builder.startObject("createTime");
+                {
+                    builder.field("type", "keyword");
+                    builder.field("store",true);
+                }
+                builder.endObject();
+
+                builder.startObject("roomId");
+                {
+                    builder.field("type", "keyword");
+                    builder.field("store",true);
+                }
+                builder.endObject();
+
+
+                builder.startObject("path");
+                {
+                    builder.field("type", "keyword");
+                    builder.field("store",true);
+                }
+                builder.endObject();
+
+
+            }
+            builder.endObject();
+        }
+        builder.endObject();
+        return builder;
+    }
 }
