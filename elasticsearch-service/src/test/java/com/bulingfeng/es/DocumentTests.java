@@ -266,4 +266,11 @@ public class DocumentTests extends ElasticsearchTests {
 
         printHightLightWord(response.getResponse());
     }
+
+
+    @Test
+    public void sourceBuilderTest(){
+        SearchSourceBuilder searchSourceBuilder=new SearchSourceBuilder();
+//        searchSourceBuilder.storedFields()
+    }
 }
