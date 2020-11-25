@@ -3,12 +3,12 @@ spring:
     master:
       jdbc-url: jdbc:mysql://127.0.0.1:3306/master
       username: root
-      password: mac666
+      password: password
       driver-class-name: com.mysql.jdbc.Driver
     slave1:
       jdbc-url: jdbc:mysql://127.0.0.1:3306/slave1
       username: root
-      password: mac666
+      password: password
       driver-class-name: com.mysql.jdbc.Driver
 
 
