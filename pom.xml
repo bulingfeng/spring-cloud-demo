@@ -30,6 +30,7 @@
         <module>schedule-service</module>
         <module>assemblly-service</module>
         <module>parse-file</module>
+        <module>down-file-service</module>
     </modules>
 
     <properties>
