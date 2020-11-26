@@ -50,6 +50,18 @@ public class EsIndexUtils {
         return createIndexResponse.isAcknowledged();
     }
 
+    public static boolean createIndex(String indexName, XContentBuilder settingBuilder,XContentBuilder mapingBuilder) throws IOException {
+        if (StringUtils.isEmpty(indexName))
+            throw new IllegalArgumentException("索引名称不能为空");
+        RestHighLevelClient client=EsClientUtils.getRestHighLevelClient();
+        CreateIndexRequest request=new CreateIndexRequest(indexName);
+        request.mapping(mapingBuilder);
+        request.settings(settingBuilder);
+        CreateIndexResponse createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
+        return createIndexResponse.isAcknowledged();
+    }
+
+
 
     public static boolean deleteIndex(String indexName) throws IOException {
         if (StringUtils.isEmpty(indexName))
