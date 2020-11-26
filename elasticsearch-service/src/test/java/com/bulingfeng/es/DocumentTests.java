@@ -156,6 +156,19 @@ public class DocumentTests extends ElasticsearchTests {
         }
     }
 
+
+    @Test
+    public void insertDocumentToEs2() throws IOException {
+        String index="index-test-20201126-1";
+        List<String> documents= Arrays.asList("I have two dogs"
+        );
+        int i=11;
+        for (String document : documents) {
+            EsDocumentUtils.addDocument(index,i+"",document);
+            i++;
+        }
+    }
+
     @Test
     public void queryAllDocument() throws IOException {
         SearchResponse searchResponse = EsDocumentUtils.queryAllDocument("index-test-20201106-alias");
