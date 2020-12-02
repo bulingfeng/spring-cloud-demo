@@ -7,7 +7,9 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,18 +25,21 @@ public class BulkApiTests extends ElasticsearchTests {
      */
     @Test
     public void bulkTest() throws IOException {
+        List<String> messages=new ArrayList<>();
         String index="index-post";
         BulkRequest request = new BulkRequest();
-        for (int i = 0; i <5 ; i++) {
+
+        int count=5;
+        for (String message : messages) {
             Map<String, Object> jsonMap = new HashMap<>();
 //            jsonMap.put("user", "kimchy");
 //            jsonMap.put("postDate", new Date());
-            jsonMap.put("message", "trying out Elasticsearch");
+            jsonMap.put("message", "042dbd0510fa4376863a348920772288(1).pdf");
             IndexRequest indexRequest = new IndexRequest(index)
-                    .id(i+"").source(jsonMap);
+                    .id(count+"").source(jsonMap);
             request.add(indexRequest);
+            count++;
         }
-
         EsDocumentUtils.bulkApi(request);
     }
 }
