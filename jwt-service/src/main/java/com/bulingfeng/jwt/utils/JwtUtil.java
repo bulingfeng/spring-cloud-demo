@@ -73,7 +73,7 @@ public class JwtUtil {
             if(System.currentTimeMillis()-jwt.getExpiresAt().getTime()>0){
                 return null;
             }
-            return jwt.getClaim("username").asString();
+            return jwt.getClaim("pwd").asString();
         } catch (JWTDecodeException e){
             e.printStackTrace();
             return null;
