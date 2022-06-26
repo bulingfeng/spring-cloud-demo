@@ -13,7 +13,7 @@
 
 
     <groupId>com.bulingfeng</groupId>
-    <artifactId>eureka-demo</artifactId>
+    <artifactId>spring-cloud-demo</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
