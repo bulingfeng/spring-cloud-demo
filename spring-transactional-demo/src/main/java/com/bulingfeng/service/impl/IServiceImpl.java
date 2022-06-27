@@ -45,4 +45,30 @@ public class IServiceImpl implements IServer {
             System.out.println("发生异常");
         }
     }
+
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    @Override
+    public void required() {
+        User user= User.builder()
+                .id(5)
+                .passWord("122")
+                .userName("hello")
+                .realName("realname")
+                .build();
+        userMapper.insertOne(user);
+        throw new RuntimeException("required exception");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+    @Override
+    public void requiredNew() {
+        User user= User.builder()
+                .id(6)
+                .passWord("122")
+                .userName("hello")
+                .realName("realname")
+                .build();
+        userMapper.insertOne(user);
+        throw new RuntimeException("requiredNew");
+    }
 }

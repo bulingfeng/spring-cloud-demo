@@ -8,4 +8,7 @@ public interface IServer {
     void methodB();
 
     void checkExceptionMethod() throws IOException;
+
+    void required();
+    void requiredNew();
 }
