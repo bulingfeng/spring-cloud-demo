@@ -2,6 +2,7 @@ package com.bulingfeng;
 
 import com.bulingfeng.entity.User;
 import com.bulingfeng.mapper.UserMapper;
+import com.bulingfeng.service.IServer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
