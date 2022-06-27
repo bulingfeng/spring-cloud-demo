@@ -31,6 +31,7 @@
         <module>assemblly-service</module>
         <module>parse-file</module>
         <module>down-file-service</module>
+        <module>spring-transactional-demo</module>
     </modules>
 
     <properties>
